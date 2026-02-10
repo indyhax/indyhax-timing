@@ -1,0 +1,51 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IndyHAX â€¢ Timing</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;max-width:900px;margin:40px auto;padding:0 16px}
+    .card{border:1px solid #ddd;border-radius:12px;padding:18px;background:#fff}
+    input{padding:10px 12px;border-radius:10px;border:1px solid #ddd;width:min(520px,100%)}
+    button{padding:10px 12px;border-radius:10px;border:1px solid #111;background:#111;color:#fff;margin-left:6px}
+    .muted{color:#666}
+    pre{margin-top:12px;padding:12px;border-radius:10px;background:#f6f8fa;border:1px solid #e5e7eb;white-space:pre-wrap}
+  </style>
+</head>
+<body>
+  <h1>IndyHAX CTF â€” Timing</h1>
+  <div class="card">
+    <p class="muted">This page compares your input to a secret character-by-character with a delay.</p>
+    <p>Goal: recover the secret, then the flag.</p>
+    <p class="muted">Hint: measure response time as you guess each next character.</p>
+    <p>
+      <input id="guess" placeholder="enter secret" />
+      <button id="go">Check</button>
+    </p>
+    <pre id="out"></pre>
+  </div>
+
+  <script>
+    const secret = 'indyhax';
+
+    async function slowEq(a,b){
+      const n = Math.min(a.length, b.length);
+      for (let i=0;i<n;i++){
+        if (a[i] !== b[i]) return false;
+        await new Promise(r=>setTimeout(r, 60));
+      }
+      return a === b;
+    }
+
+    document.querySelector('#go').addEventListener('click', async () => {
+      const t0 = performance.now();
+      const g = document.querySelector('#guess').value;
+      const ok = await slowEq(g, secret);
+      const dt = Math.round(performance.now() - t0);
+      document.querySelector('#out').textContent = ok ? 'INDYHAX{timing_side_channels_exist_even_in_js}' : 
+ope (ms);
+    });
+  </script>
+</body>
+</html>
